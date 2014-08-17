@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <title></title>
+        <script src="lib/d3.js"></script>
+        <script src="lib/d3.layout.cloud.js"></script>
+</head>
+<body>
+<h1 align="center">Find your buddy</h1>
+<p align="center">Hover the name to see more detail</p>
+        <script>
+            var fill = d3.scale.category20();
+            var ws =[]; // looks like this 
+            d3.csv("sunshinelist_sheridan2013.csv", function(data){
+
+                data.forEach(function(emp){
+                    ws.push({name:emp.name.trim(),
+                            salary: +emp.salary, 
+                            position:emp.position.trim(),
+                            rank: +emp.rank });
+                        
+                        });
+                
+                
+                // its not responsive design, feel free to fork it 
+                 d3.layout.cloud().size([1000, 1000])
+                  .words(ws)
+                  .padding(8)
+                  .rotate(function() { return ~~(Math.random() * 2) * 90; })
+                  .font("Impact")
+                  .fontSize(function(d) { return d.salary / 6000; })
+                  .on("end", draw)
+                  .start();
+                  });
+
+              function draw(words) {
+                d3.select("body").append("svg")
+                    .attr("width", 1200)
+                    .attr("height", 1200)
+                  .append("g")
+                    .attr("transform", "translate(650,550)")
+                  .selectAll("text")
+                    .data(words)
+                  .enter().append("text")
+                    .style("font-size", function(d) { return d.size + "px"; })
+                    .style("font-family", "Impact")
+                    .style("fill", function(d, i) { return fill(i); })
+                    .attr("text-anchor", "middle")
+                    
+                    .attr("transform", function(d) {
+                      return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                    })
+                    .text(function(d) { return d.name; })
+                    // append a tooltip for short discription
+                    .append("svg:title")
+                        .text(function(d){return "Name: " + d.name + "\n"
+                                                +"Position: " + d.position + "\n" 
+                                                + "Salary: $" + d.salary + "\n"
+                                                + "Rank: " + d.rank;});
+              }
+            
+        </script>
+</body>
+</html>
