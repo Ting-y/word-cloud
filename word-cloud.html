@@ -26,10 +26,10 @@
                 // its not responsive design, feel free to fork it 
                  d3.layout.cloud().size([1000, 1000])
                   .words(ws)
-                  .padding(8)
+                  .padding(5)
                   .rotate(function() { return ~~(Math.random() * 2) * 90; })
                   .font("Impact")
-                  .fontSize(function(d) { return d.salary / 6000; })
+                  .fontSize(function(d) { return d.salary / 8000; })
                   .on("end", draw)
                   .start();
                   });
